@@ -1,0 +1,46 @@
+<html> 
+	<head> 
+		<title>Soundwave</title> 
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="./oCanvas/ocanvas-2.7.3.min.js"></script>
+		<script src="./js/bezier.js"></script>
+		<script src="./js/soundwave.js"></script>
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"></link>
+  		<link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"></link>
+	</head> 
+	<body> 
+		<!-- Navbar -->
+		<nav class="navbar navbar-default" role="navigation">
+		  <div class="container-fluid">
+		    <div class="navbar-header">
+		      <a class="navbar-brand" href="#">Soundwave</a>
+		    </div>
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <div class="navbar-form navbar-left">
+		        <input type="text" placeholder="file.wav" id="wav_file">
+		        <button type="submit" class="btn btn-default" id="save">Save</button>
+		      </div>
+		    </div>
+		  </div>
+		</nav>
+   
+    		<!-- Canvas and controls -->
+		<div class="panel panel-default">
+	            <div class="panel-body">
+	            	<div id = "canvasContainer" height=500 width=1600 > 
+				<canvas height=500 width=1600 id="profileCanvas"></canvas> 
+			</div>
+			<input type="submit" value="play" class="btn btn-default" id="play" /> 
+			<input type="submit" value="stop" class="btn btn-default" id="stop" /> 
+	            </div>
+	       	</div>
+	       	
+	       	<form>
+		Points:<br>
+		<input type="text" id="points">
+		<br>
+		Duration:<br>
+		<input type="text" id="duration">
+		</form>
+	</body> 
+</html>
