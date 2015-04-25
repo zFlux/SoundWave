@@ -1,7 +1,7 @@
 $(document).ready(
 // Test Comment Try 2
 	function(){ 
-			
+			var test = 0; // pointless variable for testing please delete
 			// Create a new oCanvas object
 			var canvas = oCanvas.create({canvas: "#profileCanvas"});
 			canvas.width  = window.innerWidth;
