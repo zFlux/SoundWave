@@ -6,27 +6,25 @@ $(document).ready(
 			var canvas = oCanvas.create({canvas: "#profileCanvas"});
 			canvas.width  = window.innerWidth;
 			
-			// Global variables for the bezier curve coordinates
+			// Global variables for the Sound Wave object and its coordinates
+			// to be manipulated by button clicks and user events
 			var waveCoordCntr = 0;
 			var waveCoordArray = []; 
 			var soundWaveObj;
 			
-			// Create an audio context
+			// Global audio context to use in conjunction with the Sound Wave object to make a sound
 			var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 			
-			// Register a new object for a curve
+			// Register a new soundWave shape on our oCanvas and link it to the drawSoundwave function for rendering
 			canvas.display.register("soundWave", {shapeType: "soundWave", control: 1}, drawSoundwave);
 
-			
-			
-			
-			// Double clicking adds a small draggable bezier control circle to the canvas
+			// Double clicking adds a control point
 			canvas.bind("dblclick", function (x) {
 			        
 			        // Right button press
 				if (x.which == 1) {
-					// Detect if button press is within an existing circle
+					// Detect if button press is within an existing control point
 					var detectbit = 0;
 					if (waveCoordCntr > 0) {
 						for (i = 0; i < waveCoordArray.length; i++)
@@ -37,22 +35,25 @@ $(document).ready(
 						}
 					}
 					
-					// If not in an existing circle then add a new circle
+					// If not in an existing control point then add a new control point to the soundWave object
 					if (detectbit == 0) {
 						waveCoordCntr++;
-						// if this is the first small circle add an extra small circle at the midpoint of the start of the canvas
+						
+						// if this is the first control point add an extra control point at the midpoint of the beginning of the canvas
+						// create the soundWave object and add it to the canvas
 						if (waveCoordCntr == 1) {
-							var point = canvas.display.ellipse({x: 0, y: canvas.height / 2, radius: 5,stroke: "1px #FF0000"});
-							canvas.addChild(point);
-							waveCoordArray[waveCoordArray.length] = point;
+							var ctrlPoint = canvas.display.ellipse({x: 0, y: canvas.height / 2, radius: 5,stroke: "1px #FF0000"});
+							canvas.addChild(ctrlPoint);
+							waveCoordArray[waveCoordArray.length] = ctrlPoint;
 							soundWaveObj = canvas.display.soundWave({points: waveCoordArray, stroke: "1px #000", control: 1});
 							canvas.addChild(soundWaveObj);
 						}
-		    				var point = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #FF0000"});
-		    				waveCoordArray[waveCoordArray.length] = point;
-						canvas.addChild(point);
+						
+		    			var ctrlPoint = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #FF0000"});
+		    			waveCoordArray[waveCoordArray.length] = ctrlPoint;
+						canvas.addChild(ctrlPoint);
 						var dragOptions = { changeZindex: false };
-						point.dragAndDrop(dragOptions);
+						ctrlPoint.dragAndDrop(dragOptions);
 					}
 					
 				}
