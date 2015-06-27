@@ -6,10 +6,10 @@ $(document).ready(
 			var canvas = oCanvas.create({canvas: "#profileCanvas"});
 			canvas.width  = window.innerWidth;
 			
-			// Global variables for points
-			var pointCounter = 0;
-			var pointArray = []; 
-			var bezier;
+			// Global variables for the bezier curve coordinates
+			var waveCoordCntr = 0;
+			var waveCoordArray = []; 
+			var soundWaveObj;
 			
 			// Create an audio context
 			var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -21,18 +21,17 @@ $(document).ready(
 			
 			
 			
-			// Pressing x while the canvas is selected adds a small draggable circle to the canvas
-			// As well as a line connecting it to the previous circle or the mid point of the canvas if its the first click
+			// Double clicking adds a small draggable bezier control circle to the canvas
 			canvas.bind("dblclick", function (x) {
 			        
 			        // Right button press
 				if (x.which == 1) {
 					// Detect if button press is within an existing circle
 					var detectbit = 0;
-					if (pointCounter > 0) {
-						for (i = 0; i < pointArray.length; i++)
+					if (waveCoordCntr > 0) {
+						for (i = 0; i < waveCoordArray.length; i++)
 						{
-							if ( Math.pow( canvas.mouse.x - pointArray[i].x, 2) + Math.pow( canvas.mouse.y - pointArray[i].y, 2) < Math.pow(pointArray[i].radius,2)) {
+							if ( Math.pow( canvas.mouse.x - waveCoordArray[i].x, 2) + Math.pow( canvas.mouse.y - waveCoordArray[i].y, 2) < Math.pow(waveCoordArray[i].radius,2)) {
 								detectbit = 1;
 							}
 						}
@@ -40,17 +39,17 @@ $(document).ready(
 					
 					// If not in an existing circle then add a new circle
 					if (detectbit == 0) {
-						pointCounter++;
+						waveCoordCntr++;
 						// if this is the first small circle add an extra small circle at the midpoint of the start of the canvas
-						if (pointCounter == 1) {
+						if (waveCoordCntr == 1) {
 							var point = canvas.display.ellipse({x: 0, y: canvas.height / 2, radius: 5,stroke: "1px #FF0000"});
 							canvas.addChild(point);
-							pointArray[pointArray.length] = point;
-							bezier = canvas.display.soundWave({points: pointArray, stroke: "1px #000", control: 1});
-							canvas.addChild(bezier);
+							waveCoordArray[waveCoordArray.length] = point;
+							soundWaveObj = canvas.display.soundWave({points: waveCoordArray, stroke: "1px #000", control: 1});
+							canvas.addChild(soundWaveObj);
 						}
 		    				var point = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #FF0000"});
-		    				pointArray[pointArray.length] = point;
+		    				waveCoordArray[waveCoordArray.length] = point;
 						canvas.addChild(point);
 						var dragOptions = { changeZindex: false };
 						point.dragAndDrop(dragOptions);
@@ -66,11 +65,11 @@ $(document).ready(
 			
 				// Spacebar turns on and off the control points and lines of the bezier object
 				if (x.which == 32) {
-					if(bezier.control == 0) {
-						bezier.control = 1;
+					if(soundWaveObj.control == 0) {
+						soundWaveObj.control = 1;
 						canvas.redraw();
 					} else {
-						bezier.control = 0; 
+						soundWaveObj.control = 0; 
 						canvas.redraw();
 					}
 				}
@@ -78,7 +77,7 @@ $(document).ready(
 				// the letter E creates an endpoint
 				if (x.which == 69) {
 					var point = canvas.display.ellipse({x: canvas.width, y: canvas.height / 2, radius: 5,stroke: "1px #FF0000"});
-		    			pointArray[pointArray.length] = point;
+		    			waveCoordArray[waveCoordArray.length] = point;
 					canvas.addChild(point);
 				}
 				
@@ -86,9 +85,9 @@ $(document).ready(
 				if (x.which == 67) {
 					canvas.children = [];
 					canvas.clear();
-					pointCounter = 0;
-					pointArray = [];
-					bezier = null;
+					waveCoordCntr = 0;
+					waveCoordArray = [];
+					soundWaveObj = null;
 				}
 			
 			});
@@ -97,7 +96,7 @@ $(document).ready(
 			  
 			        var wave = [];
 			        
-			        wave = bezierCurve2(pointArray, $("#points").val());
+			        wave = bezierCurve(waveCoordArray, $("#points").val());
 			        
 			        // Stereo
 				var channels = 2;

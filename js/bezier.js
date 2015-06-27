@@ -5,7 +5,7 @@ function drawSoundwave(canvas) {
 					canvas.lineWidth = this.strokeWidth;
 				}
 				
-				// Draw lines for every other two control points if there's no lock
+				// Draw red control lines for every other two control points if there's no lock
 				canvas.beginPath();
 		 		if (this.control == 1) {canvas.strokeStyle = "#FF0000";} else {canvas.strokeStyle = "#fff";}
 		 		for (i = 0; i < this.points.length; i++){this.points[i].strokeColor = canvas.strokeStyle;}
@@ -21,7 +21,7 @@ function drawSoundwave(canvas) {
 				canvas.stroke();
 	 			canvas.closePath();	
 	 			
-				c = bezierCurve2(this.points, $("#points").val() );
+				c = bezierCurve(this.points, $("#points").val() );
 				
 				
 				canvas.beginPath();
@@ -31,14 +31,12 @@ function drawSoundwave(canvas) {
 				}  
 				canvas.stroke();
 		 		canvas.closePath();
-	 			     
-
 }
 
 
 
 // New bezier drawing function
-function bezierCurve2(ctrlPointArray, numDots) {
+function bezierCurve(ctrlPointArray, numDots) {
 	
 	var bezierCoordArray = [];
 
