@@ -39,17 +39,19 @@ $(document).ready(
 					if (detectbit == 0) {
 						waveCoordCntr++;
 						
-						// if this is the first control point create the soundWave object and add it to the canvas
-						if (waveCoordCntr == 1) {
-							soundWaveObj = canvas.display.soundWave({points: waveCoordArray, stroke: "1px #000", control: 1});
-							canvas.addChild(soundWaveObj);
-						}
+
 						
 		    			var ctrlPoint = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #FF0000"});
 		    			waveCoordArray[waveCoordArray.length] = ctrlPoint;
 						canvas.addChild(ctrlPoint);
 						var dragOptions = { changeZindex: false };
 						ctrlPoint.dragAndDrop(dragOptions);
+						
+						// if this is the first control point create the soundWave object and add it to the canvas
+						if (waveCoordCntr == 1) {
+							soundWaveObj = canvas.display.soundWave({points: waveCoordArray, stroke: "1px #000", control: 1});
+							canvas.addChild(soundWaveObj);
+						}
 					}
 					
 				}
