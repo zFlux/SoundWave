@@ -49,11 +49,11 @@ function bezierCurve(ctrlPointArray, numDots, canvasLength) {
 		
 		// In order to smoothly curve from the end into the beginning
 		// Set the last point's x value to be the same distance from the end as the first point is from the beginning
-		ctrlPointArray[ctrlPointArray.length].x = canvasLength - ctrlPointArray[1].x
+		ctrlPointArray[ctrlPointArray.length-1].x = canvasLength - ctrlPointArray[1].x
 		
 		// The first curve is a special case where it starts at the midpoint between the last control point and the first control point
 		var startx = 0;
-		var starty = (ctrlPointArray[0].y + ctrlPointArray[ctrlPointArray.length].y) / 2
+		var starty = (ctrlPointArray[0].y + ctrlPointArray[ctrlPointArray.length-1].y) / 2
  		// and the last point is the midpoint between point 3 and point 4
 		var midx = (ctrlPointArray[2].x + ctrlPointArray[3].x) / 2
 		var midy = (ctrlPointArray[2].y + ctrlPointArray[3].y) / 2
@@ -86,12 +86,12 @@ function bezierCurve(ctrlPointArray, numDots, canvasLength) {
 		lastmidx = midx;
 		lastmidy = midy;
 		var endx = canvasLength
-		var endy = (ctrlPointArray[ctrlPointArray.length].y + ctrlPointArray[0].y) / 2
+		var endy = (ctrlPointArray[ctrlPointArray.length-1].y + ctrlPointArray[0].y) / 2
 		var n = numDots / (ctrlPointArray.length / 4);
 		
 		for (t = 0; t <= 1; t+=(1/n)) {
-			x = Math.pow(1 - t, 3)*lastmidx + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[ctrlPointArray.length-1].x + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[ctrlPointArray.length].x + Math.pow(t,3)*endx;
-			y = Math.pow(1 - t, 3)*lastmidy + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[ctrlPointArray.length-1].y + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[ctrlPointArray.length].y + Math.pow(t,3)*endy;
+			x = Math.pow(1 - t, 3)*lastmidx + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[ctrlPointArray.length-2].x + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[ctrlPointArray.length-1].x + Math.pow(t,3)*endx;
+			y = Math.pow(1 - t, 3)*lastmidy + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[ctrlPointArray.length-2].y + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[ctrlPointArray.length-1].y + Math.pow(t,3)*endy;
 			bezierCoordArray[bezierCoordArray.length] = {x:x, y:y};
 		} 
 	}
