@@ -39,12 +39,8 @@ $(document).ready(
 					if (detectbit == 0) {
 						waveCoordCntr++;
 						
-						// if this is the first control point add an extra control point at the midpoint of the beginning of the canvas
-						// create the soundWave object and add it to the canvas
+						// if this is the first control point create the soundWave object and add it to the canvas
 						if (waveCoordCntr == 1) {
-							var ctrlPoint = canvas.display.ellipse({x: 0, y: canvas.height / 2, radius: 5,stroke: "1px #FF0000"});
-							canvas.addChild(ctrlPoint);
-							waveCoordArray[waveCoordArray.length] = ctrlPoint;
 							soundWaveObj = canvas.display.soundWave({points: waveCoordArray, stroke: "1px #000", control: 1});
 							canvas.addChild(soundWaveObj);
 						}
