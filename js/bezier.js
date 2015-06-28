@@ -7,7 +7,7 @@ function drawSoundwave(canvas) {
 				
 				// Draw red control lines for every other two control points if there's no lock
 				canvas.beginPath();
-		 		if (this.control == 1) {canvas.strokeStyle = "#FF0000";} else {canvas.strokeStyle = "#FFF";}
+		 		if (this.control == 1) {canvas.strokeStyle = "#000000";} else {canvas.strokeStyle = "#FFF";}
 		 		for (i = 0; i < this.points.length; i++){this.points[i].strokeColor = canvas.strokeStyle;}
 
 		 		for (i = 2; i < this.points.length; i+=2)
@@ -25,7 +25,7 @@ function drawSoundwave(canvas) {
 				
 				
 				canvas.beginPath();
-				canvas.strokeStyle = "#FF0000";
+				canvas.strokeStyle = "#000000";
 				for (t = 0; t < c.length ; t++) {
 					canvas.fillRect(c[t].x,c[t].y,1,1);
 				}  
