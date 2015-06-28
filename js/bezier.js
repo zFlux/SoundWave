@@ -45,7 +45,7 @@ function bezierCurve(ctrlPointArray, numDots, canvasLength) {
 	var bezierCoordArray = [];
 
 	// At least four points are necessary for a bezier
-	if (ctrlPointArray.length > 3) {
+	if (ctrlPointArray.length > 2) {
 		
 		// In order to smoothly curve from the end into the beginning
 		// Set the last point's x value to be the same distance from the end as the first point is from the beginning
@@ -55,19 +55,19 @@ function bezierCurve(ctrlPointArray, numDots, canvasLength) {
 		var startx = 0;
 		var starty = (ctrlPointArray[0].y + ctrlPointArray[ctrlPointArray.length-1].y) / 2
  		// and the last point is the midpoint between point 3 and point 4
-		var midx = (ctrlPointArray[2].x + ctrlPointArray[3].x) / 2
-		var midy = (ctrlPointArray[2].y + ctrlPointArray[3].y) / 2
+		var midx = (ctrlPointArray[1].x + ctrlPointArray[2].x) / 2
+		var midy = (ctrlPointArray[1].y + ctrlPointArray[2].y) / 2
 		var n = numDots / (ctrlPointArray.length / 4);
 		for (t = 0; t <= 1; t+=(1/n)) {
-			x = Math.pow(1 - t, 3)*startx + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[1].x + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[2].x + Math.pow(t,3)*midx;
-			y = Math.pow(1 - t, 3)*starty + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[1].y + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[2].y + Math.pow(t,3)*midy;
+			x = Math.pow(1 - t, 3)*startx + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[0].x + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[1].x + Math.pow(t,3)*midx;
+			y = Math.pow(1 - t, 3)*starty + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[0].y + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[1].y + Math.pow(t,3)*midy;
 			bezierCoordArray[bezierCoordArray.length] = {x:x, y:y};
 		}  
 		
 		var lastmidx;
 		var lastmidy;
 		// the remainder of the curves are drawn from from prior curves midpoint to the next curves midpoint thus only using three points
-		for (i = 3; i < ctrlPointArray.length - 3; i+=2)
+		for (i = 2; i < ctrlPointArray.length - 4; i+=2)
 		{
 			lastmidx = midx;
 			lastmidy = midy;
