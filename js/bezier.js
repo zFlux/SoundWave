@@ -21,7 +21,7 @@ function drawSoundwave(canvas) {
 				canvas.stroke();
 	 			canvas.closePath();	
 	 			
-				c = bezierCurve(this.points, $("#points").val(), canvas.width );
+				c = bezierCurve(this.points, $("#points").val(), canvas.canvas.width );
 				
 				
 				canvas.beginPath();
