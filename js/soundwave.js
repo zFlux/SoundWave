@@ -94,7 +94,7 @@ $(document).ready(
 			$( '#play' ).click ( function () {
 			  
 			    var wave = [];
-			    wave = bezierCurve(waveCoordArray, $("#points").val());
+			    wave = bezierCurvePath(waveCoordArray, $("#points").val(), canvas.width);
 			        
 			    // Stereo
 				var channels = 2;
@@ -115,7 +115,6 @@ $(document).ready(
 
 					for (var i = 0; i < wave.length; i++) {
 						nowBuffering[(j* wave.length) + i] = ((wave[i].y - (canvas.height / 2)) / canvas.height); 
-						nowBuffering[(j* wave.length) + wave.length + i] = (-1 * (wave[i].y - (canvas.height / 2)) / canvas.height); 
 					}	
 					
 				}
