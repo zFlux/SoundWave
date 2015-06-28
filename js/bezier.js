@@ -98,8 +98,8 @@ function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
 	
 	// Once I have all the points for the bezier curve I need to loop through all of them looking for evenly spaced forward moving values of x
 	
-	// Im assuming that the first x minus the last x constitute the values of x I have to play with (this can be not true but is a necessary assumption)
-	var len = Math.abs(ctrlPointArray[ctrlPointArray.length - 1].x - ctrlPointArray[0].x)
+	// I should have the whole canvas for values of x
+	var len = canvasLength
 	var incr = len / numDots;
 	var j = 0;
 	
