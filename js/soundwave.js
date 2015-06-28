@@ -95,20 +95,17 @@ $(document).ready(
 			
 			$( '#play' ).click ( function () {
 			  
-			        var wave = [];
+			    var wave = [];
+			    wave = bezierCurve(waveCoordArray, $("#points").val());
 			        
-			        wave = bezierCurve(waveCoordArray, $("#points").val());
-			        
-			        // Stereo
+			    // Stereo
 				var channels = 2;
 				
 				// Create an empty duration seconds stereo buffer at the
 				// sample rate of the AudioContext
 				var frameCount = audioCtx.sampleRate * $("#duration").val();
 				
-				
 				var myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);
-				
 
 				// Fill the buffer with my invented sound and the complement
 				for (var channel = 0; channel < channels; channel++) {
@@ -123,7 +120,6 @@ $(document).ready(
 						nowBuffering[(j* wave.length) + wave.length + i] = (-1 * (wave[i].y - (canvas.height / 2)) / canvas.height); 
 					}	
 					
-	
 				}
 				
 				// Get an AudioBufferSourceNode

@@ -40,7 +40,6 @@ function bezierCurve(ctrlPointArray, numDots) {
 	
 	var bezierCoordArray = [];
 
-	
 	// At least four points are necessary for a bezier
 	if (ctrlPointArray.length > 3) {
 		
@@ -71,7 +70,6 @@ function bezierCurve(ctrlPointArray, numDots) {
 				bezierCoordArray[bezierCoordArray.length] = {x:x, y:y};
 			}  
 		}
-			
 		
 	}
 	
