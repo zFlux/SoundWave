@@ -21,7 +21,7 @@ function drawSoundwave(canvas) {
 				canvas.stroke();
 	 			canvas.closePath();	
 	 			
-				c = bezierCurve(this.points, $("#points").val(), canvas.canvas.width );
+				c = bezierCurvePath(this.points, $("#points").val(), canvas.canvas.width );
 				
 				
 				canvas.beginPath();
@@ -40,7 +40,7 @@ function drawSoundwave(canvas) {
 //  
 // ctrlPointArray: An array of bezier curve control coordinates
 // numDots: This 
-function bezierCurve(ctrlPointArray, numDots, canvasLength) {
+function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
 	
 	var bezierCoordArray = [];
 
