@@ -45,7 +45,7 @@ function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
 	var bezierCoordArray = [];
 
 	// At least four points are necessary for a bezier
-	if (ctrlPointArray.length > 2) {
+	if (ctrlPointArray.length > 3) {
 		
 		// In order to smoothly curve from the end into the beginning
 		// Set the last point's x value to be the same distance from the end as the first point is from the beginning
@@ -67,7 +67,7 @@ function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
 		var lastmidx;
 		var lastmidy;
 		// the remainder of the curves are drawn from from prior curves midpoint to the next curves midpoint thus only using three points
-		for (i = 2; i < ctrlPointArray.length - 4; i+=2)
+		for (i = 2; i < ctrlPointArray.length - 3; i+=2)
 		{
 			lastmidx = midx;
 			lastmidy = midy;
