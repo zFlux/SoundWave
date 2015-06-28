@@ -49,7 +49,7 @@ function bezierCurve(ctrlPointArray, numDots, canvasLength) {
 		
 		// In order to smoothly curve from the end into the beginning
 		// Set the last point's x value to be the same distance from the end as the first point is from the beginning
-		ctrlPointArray[ctrlPointArray.length-1].x = canvasLength - ctrlPointArray[1].x
+		ctrlPointArray[ctrlPointArray.length-1].x = canvasLength - ctrlPointArray[0].x
 		
 		// The first curve is a special case where it starts at the midpoint between the last control point and the first control point
 		var startx = 0;
