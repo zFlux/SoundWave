@@ -38,9 +38,7 @@ $(document).ready(
 					// If not in an existing control point then add a new control point to the soundWave object
 					if (detectbit == 0) {
 						waveCoordCntr++;
-						
-
-						
+					
 		    			var ctrlPoint = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #FF0000"});
 		    			waveCoordArray[waveCoordArray.length] = ctrlPoint;
 						canvas.addChild(ctrlPoint);
@@ -76,7 +74,7 @@ $(document).ready(
 				// the letter E creates an endpoint
 				if (x.which == 69) {
 					var point = canvas.display.ellipse({x: canvas.width, y: canvas.height / 2, radius: 5,stroke: "1px #FF0000"});
-		    			waveCoordArray[waveCoordArray.length] = point;
+		    		waveCoordArray[waveCoordArray.length] = point;
 					canvas.addChild(point);
 				}
 				
@@ -105,17 +103,17 @@ $(document).ready(
 				
 				var myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);
 
-				// Fill the buffer with my invented sound and the complement
+				// Fill the buffer with my invented sound 
 				for (var channel = 0; channel < channels; channel++) {
 					// This gives us the actual array that contains the data
 					var nowBuffering = myArrayBuffer.getChannelData(channel);
 
-				// loop over the entire frame count
-				for (var j = 0; j < Math.floor(frameCount / wave.length); j++)
-
-					for (var i = 0; i < wave.length; i++) {
-						nowBuffering[(j* wave.length) + i] = ((wave[i].y - (canvas.height / 2)) / canvas.height); 
-					}	
+					// loop over the entire frame count
+					for (var j = 0; j < Math.floor(frameCount / wave.length); j++) {
+						for (var i = 0; i < wave.length; i++) {
+							nowBuffering[(j* wave.length) + i] = ((wave[i].y - (canvas.height / 2)) / canvas.height); 
+						}	
+					}
 					
 				}
 				

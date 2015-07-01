@@ -36,10 +36,10 @@ function drawSoundwave(canvas) {
 
 
 // Custom bezier drawing function for this specific application.
-// Computes an array of set number of coordinates (numDots) along a bezier curve having the control points
+// Computes an array of equidistant dots along a bezier curve
 //  
 // ctrlPointArray: An array of bezier curve control coordinates
-// numDots: This 
+// numDots: The number of dots
 function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
 	
 	var bezierCoordArray = [];
