@@ -91,45 +91,7 @@ $(document).ready(
 			
 			$( '#play' ).click ( function () {
 			  
-			    var wave = [];
-			    wave = bezierCurvePath(waveCoordArray, $("#points").val(), canvas.width);
-			        
-			    // Stereo
-				var channels = 2;
-				
-				// Create an empty duration seconds stereo buffer at the
-				// sample rate of the AudioContext
-				var frameCount = audioCtx.sampleRate * $("#duration").val();
-				
-				var myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);
-
-				// Fill the buffer with my invented sound 
-				for (var channel = 0; channel < channels; channel++) {
-					// This gives us the actual array that contains the data
-					var nowBuffering = myArrayBuffer.getChannelData(channel);
-
-					// loop over the entire frame count
-					for (var j = 0; j < Math.floor(frameCount / wave.length); j++) {
-						for (var i = 0; i < wave.length; i++) {
-							nowBuffering[(j* wave.length) + i] = ((wave[i].y - (canvas.height / 2)) / canvas.height); 
-						}	
-					}
-					
-				}
-				
-				// Get an AudioBufferSourceNode
-				// This is the AudioNode to use when we want to play an AudioBuffer
-				var source = audioCtx.createBufferSource();
-				
-				// set the buffer in the AudioBufferSourceNode
-				source.buffer = myArrayBuffer;
-				
-				// connect the AudioBufferSourceNode to the
-				// destination so we can hear the sound
-				source.connect(audioCtx.destination);
-				
-				// start the source playing
-				source.start();
+				playSoundwave(waveCoordArray, audioCtx, canvas);
 
 
 			});
