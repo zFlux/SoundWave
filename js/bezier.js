@@ -2,8 +2,8 @@
 // Computes an array of equidistant dots along a bezier curve
 //  
 // ctrlPointArray: An array of bezier curve control coordinates
-// numDots: The number of dots
-function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
+// numDrawnPoints: The number of dots
+function bezierCurvePath(ctrlPointArray, numDrawnPoints, canvasLength) {
 	
 	var bezierCoordArray = [];
 
@@ -20,7 +20,7 @@ function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
  		// and the last point is the midpoint between point 3 and point 4
 		var midx = (ctrlPointArray[1].x + ctrlPointArray[2].x) / 2
 		var midy = (ctrlPointArray[1].y + ctrlPointArray[2].y) / 2
-		var n = numDots / (ctrlPointArray.length / 4);
+		var n = numDrawnPoints / (ctrlPointArray.length / 4);
 		for (t = 0; t <= 1; t+=(1/n)) {
 			x = Math.pow(1 - t, 3)*startx + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[0].x + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[1].x + Math.pow(t,3)*midx;
 			y = Math.pow(1 - t, 3)*starty + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[0].y + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[1].y + Math.pow(t,3)*midy;
@@ -36,7 +36,7 @@ function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
 			lastmidy = midy;
 			var midx = (ctrlPointArray[i+1].x + ctrlPointArray[i+2].x) / 2
 			var midy = (ctrlPointArray[i+1].y + ctrlPointArray[i+2].y) / 2
-			var n = numDots / (ctrlPointArray.length / 4);
+			var n = numDrawnPoints / (ctrlPointArray.length / 4);
 			
 			for (t = 0; t <= 1; t+=(1/n)) {
 				x = Math.pow(1 - t, 3)*lastmidx + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[i].x + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[i+1].x + Math.pow(t,3)*midx;
@@ -50,7 +50,7 @@ function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
 		lastmidy = midy;
 		var endx = canvasLength
 		var endy = (ctrlPointArray[ctrlPointArray.length-1].y + ctrlPointArray[0].y) / 2
-		var n = numDots / (ctrlPointArray.length / 4);
+		var n = numDrawnPoints / (ctrlPointArray.length / 4);
 		
 		for (t = 0; t <= 1; t+=(1/n)) {
 			x = Math.pow(1 - t, 3)*lastmidx + 3*Math.pow(1 -  t,2)*t*ctrlPointArray[ctrlPointArray.length-2].x + 3*(1 -  t)*Math.pow(t,2)*ctrlPointArray[ctrlPointArray.length-1].x + Math.pow(t,3)*endx;
@@ -63,7 +63,7 @@ function bezierCurvePath(ctrlPointArray, numDots, canvasLength) {
 	
 	// I should have the whole canvas for values of x
 	var len = canvasLength
-	var incr = len / numDots;
+	var incr = len / numDrawnPoints;
 	var j = 0;
 	
 	var evenSpacedArray = [];
