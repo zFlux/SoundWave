@@ -12,9 +12,21 @@ $(document).ready(
 			var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 									// Global audio context 
 			var RIGHT_MOUSE = 1;																						// Global constants
 			var SPACEBAR = 32;
+			var BACKSPACE = 8;
 			var LETTER_C = 67;
 			var NO = 0;
 			var YES = 1;
+			var KEY_MAP = 
+			
+			{
+				
+				
+			65 : {letter : 'A', value : -5}, 83 : {letter : 'S', value : -4}, 68 : {letter : 'D', value : -3}, 70 : {letter : 'F', value : -2}, 71 : {letter : 'G', value : -1},  72 : {letter : 'H', value : 0}
+			,  74 : {letter : 'J', value : 1}
+			,  75 : {letter : 'K', value : 2}
+			,  76 : {letter : 'L', value : 3}
+			
+			};
 			
 			canvas.bind("dblclick", function (click) { 																	// Double clicking adds a control point
 			     
@@ -51,17 +63,20 @@ $(document).ready(
 					}
 				}
 				
-				if (key.which == LETTER_C) {										// the letter C clears the canvas and resets the global variables
+				if (key.which == BACKSPACE) {										// the letter C clears the canvas and resets the global variables
 					canvas.children = [];
 					canvas.clear();
 					ctrlPointArray = [];
-					soundWaveObj = null;
 				}
+				
+				var frequency = $("#points").val() * Math.pow(2, KEY_MAP[key.which].value / 12);
+				playSoundWave(ctrlPointArray, frequency, canvas.width, canvas.height, audioCtx);
 			
 			});
 			
 			$( '#play' ).click ( function () { 
-				playSoundWave(ctrlPointArray, audioCtx, canvas.width, canvas.height);
+				var numRenderedPoints = $("#points").val();
+				playSoundWave(ctrlPointArray, numRenderedPoints, canvas.width, canvas.height, audioCtx);
 			});
 	
 	});

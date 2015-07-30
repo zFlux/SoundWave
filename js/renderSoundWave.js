@@ -17,7 +17,7 @@ function drawSoundwave(canvas) {
 						}
 				}
 	 			
-				c = bezierCurvePath(this.ctrlPoints, $("#points").val(), canvas.canvas.width );
+				c = bezierCurvePath(this.ctrlPoints, $("#points").val(), canvas.canvas.width, canvas.canvas.height );
 				canvas.strokeStyle = BLACK;
 				for (t = 0; t < c.length ; t++) {
 					canvas.fillRect(c[t].x,c[t].y,1,1);																	// Fill a pixel
@@ -26,9 +26,9 @@ function drawSoundwave(canvas) {
 		 		canvas.closePath();
 }
 
-function playSoundWave(ctrlPointArray, audioCtx, frameWidth, frameHeight) {
+function playSoundWave(ctrlPointArray, numRenderedPoints, frameWidth, frameHeight, audioCtx) {
 				var wave = [];
-			    wave = bezierCurvePath(ctrlPointArray, $("#points").val(), frameWidth); 											    
+			    wave = bezierCurvePath(ctrlPointArray, numRenderedPoints, frameWidth, frameHeight); 											    
 				var channels = 2;																						// Make it a stereo sound
 				var frameCount = audioCtx.sampleRate * $("#duration").val();											
 				var myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);					// Create an empty duration seconds of stereo buffer at the sample rate of the AudioContext
