@@ -26,9 +26,7 @@ function drawSoundwave(canvas) {
 		 		canvas.closePath();
 }
 
-function playSoundWave(ctrlPointArray, numRenderedPoints, frameWidth, frameHeight, audioCtx) {
-				var wave = [];
-			    wave = bezierCurvePath(ctrlPointArray, numRenderedPoints, frameWidth, frameHeight); 											    
+function playSoundWave(wave, audioCtx) {											    
 				var channels = 2;																						// Make it a stereo sound
 				var frameCount = audioCtx.sampleRate * $("#duration").val();											
 				var myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);					// Create an empty duration seconds of stereo buffer at the sample rate of the AudioContext
@@ -37,7 +35,7 @@ function playSoundWave(ctrlPointArray, numRenderedPoints, frameWidth, frameHeigh
 					var nowBuffering = myArrayBuffer.getChannelData(channel);											// This gives us the actual array that contains the data
 					for (var j = 0; j < Math.floor(frameCount / wave.length); j++) {									// loop over the entire frame count
 						for (var i = 0; i < wave.length; i++) {
-							nowBuffering[(j* wave.length) + i] = ((wave[i].y - (frameHeight / 2)) / frameHeight); 
+							nowBuffering[(j* wave.length) + i] = wave[i].y; 
 						}	
 					}
 				}
