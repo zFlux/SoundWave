@@ -30,7 +30,7 @@ function bezierCurvePath(ctrlPointArray, numRenderedPoints, pathWidth, pathHeigh
 		
 		var lastmidx;
 		var lastmidy;
-		// the remainder of the curves are drawn from from prior curves midpoint to the next curves midpoint thus only using three points
+		// the remainder of the curves are drawn from prior curves midpoint to the next curves midpoint thus only using three points
 		for (i = 2; i < ctrlPointArray.length - 3; i+=2)
 		{
 			lastmidx = midx;

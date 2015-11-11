@@ -47,11 +47,9 @@ $(document).ready(
 						}
 					}
 					
-					if (isExistingCtrlPoint == NO) {																	// If not in an existing control point then add a new drawn control point and sound control point 
-		    			var ctrlPoint = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #000"});
-						var sndCtrlPoint = {x: ctrlPoint.x, y: ((ctrlPoint.y - (canvas.height / 2)) / (canvas.height/2)) };  // for the sound y coordinate ensure it's a number between +1 and -1   
+					if (isExistingCtrlPoint == NO) {																	     // If not in an existing control point then add a new drawn control point and sound control point 
+		    			var ctrlPoint = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #000"}); 
 		    			ctrlPointArray[ctrlPointArray.length] = ctrlPoint;
-						sndCtrlPointArray[sndCtrlPointArray.length] = sndCtrlPoint;
 						canvas.addChild(ctrlPoint);
 						var dragOptions = { changeZindex: false };
 						ctrlPoint.dragAndDrop(dragOptions);
@@ -72,22 +70,27 @@ $(document).ready(
 					}
 				}
 				
-				if (key.which == BACKSPACE) {										// the letter C clears the canvas and resets the global variables
+				else if (key.which == BACKSPACE) {										// the letter C clears the canvas and resets the global variables
 					canvas.children = [];
 					canvas.clear();
 					ctrlPointArray = [];
 				}
 				
-				var frequency = $("#points").val() * Math.pow(2, KEY_MAP[key.which].value / 12);
-				var wave = [];
-				for (i = 0; i < ctrlPointArray.length; i++) {
-						
-				} 
+				else {
 				
-
-			    wave = bezierCurvePath(sndCtrlPointArray, frequency, frequency, 1); 
-				playSoundWave(wave, audioCtx);
-			
+					var frequency = $("#points").val() * Math.pow(2, KEY_MAP[key.which].value / 12);
+					var wave = [];
+					sndCtrlPointArray = [];
+					
+					// Transpose the control points to values between -1 and 1
+					for (i = 0; i < ctrlPointArray.length; i++) {
+							var sndCtrlPoint = {x: Math.round(ctrlPointArray[i].x) / frequency, y: ((Math.round(ctrlPointArray[i].y) /(canvas.height)) - 1) };  // for the sound y coordinate ensure it's a number between +1 and -1  
+							sndCtrlPointArray[sndCtrlPointArray.length] = sndCtrlPoint;
+					} 
+					
+					wave = bezierCurvePath(sndCtrlPointArray, frequency, frequency, 1); 
+					playSoundWave(wave, audioCtx);
+				}
 			});
 			
 			$( '#play' ).click ( function () { 
