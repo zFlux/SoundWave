@@ -1,17 +1,17 @@
 $(document).ready(
 
 	function(){ 
-			var canvas = oCanvas.create({canvas: "#profileCanvas"}); 													// Global oCanvas object
-			canvas.width  = window.innerWidth;																			// Set the canvas width equal to the browser's inner window width
+			var canvas = oCanvas.create({canvas: "#profileCanvas"}); 							// Global oCanvas object
+			canvas.width  = window.innerWidth;										// Set the canvas width equal to the browser's inner window width
 			
-			var ctrlPointArray = []; 																					// Global variable array to hold the curve's control point coordinates for the drawn bezier curve
-			var sndCtrlPointArray = [];																					// Global variable array to hold the curve's control point coordinates for the sound wave 
-			canvas.display.register("soundWave", {shapeType: "soundWave", isVisible: 1}, drawSoundwave);  				// Register a new custom soundWave shape for our oCanvas and link it to the drawSoundwave function																						
+			var ctrlPointArray = []; 											// Global variable array to hold the curve's control point coordinates for the drawn bezier curve
+			var sndCtrlPointArray = [];											// Global variable array to hold the curve's control point coordinates for the sound wave 
+			canvas.display.register("soundWave", {shapeType: "soundWave", isVisible: 1}, drawSoundwave);  			// Register a new custom soundWave shape for our oCanvas and link it to the drawSoundwave function																						
 			var soundWaveObj = canvas.display.soundWave({ctrlPoints: ctrlPointArray, stroke: "1px #000", isVisible: 1}); 	// Global variable soundWave shape object	
 			canvas.addChild(soundWaveObj);
 			
-			var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 									// Global audio context 
-			var RIGHT_MOUSE = 1;																						// Global constants
+			var audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 					// Global audio context 
+			var RIGHT_MOUSE = 1;												// Global constants
 			var SPACEBAR = 32;
 			var BACKSPACE = 8;
 			var LETTER_C = 67;
@@ -35,8 +35,8 @@ $(document).ready(
 			77 : {letter : 'M', value : -13},  188 : {letter : '\,', value : -15},  190 : {letter : '\.', value : -17},  191 : {letter : '\/', value : -19},  16 : {letter : 'SHIFT', value : -21},  38 : {letter : '', value : -23},
 			};
 			
-			canvas.bind("dblclick", function (click) { 																	// Double clicking adds a control point
-			     
+			canvas.bind("dblclick", function (click) { 																		// Double clicking adds a control point
+			    
 				if (click.which == RIGHT_MOUSE) {												 						// Right button press
 					var isExistingCtrlPoint = NO;
 					if (ctrlPointArray.length > 0) {																	// Detect if button press is within an existing control point
@@ -47,9 +47,9 @@ $(document).ready(
 						}
 					}
 					
-					if (isExistingCtrlPoint == NO) {																	     // If not in an existing control point then add a new drawn control point and sound control point 
-		    			var ctrlPoint = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #000"}); 
-		    			ctrlPointArray[ctrlPointArray.length] = ctrlPoint;
+					if (isExistingCtrlPoint == NO) {																	// If not in an existing control point then add a new drawn control point and sound control point 
+					var ctrlPoint = canvas.display.ellipse({x: canvas.mouse.x, y: canvas.mouse.y, radius: 5,stroke: "1px #000"}); 
+					ctrlPointArray[ctrlPointArray.length] = ctrlPoint;
 						canvas.addChild(ctrlPoint);
 						var dragOptions = { changeZindex: false };
 						ctrlPoint.dragAndDrop(dragOptions);
@@ -70,7 +70,7 @@ $(document).ready(
 					}
 				}
 				
-				else if (key.which == BACKSPACE) {										// the letter C clears the canvas and resets the global variables
+				else if (key.which == BACKSPACE) {									// the letter C clears the canvas and resets the global variables
 					canvas.children = [];
 					canvas.clear();
 					ctrlPointArray = [];
@@ -84,11 +84,11 @@ $(document).ready(
 					
 					// Transpose the control points to values between -1 and 1
 					for (i = 0; i < ctrlPointArray.length; i++) {
-							var sndCtrlPoint = {x: Math.round(ctrlPointArray[i].x) / frequency, y: ((Math.round(ctrlPointArray[i].y) /(canvas.height)) - 1) };  // for the sound y coordinate ensure it's a number between +1 and -1  
+							var sndCtrlPoint = {x: (ctrlPointArray[i].x / canvas.width) * frequency, y: ((ctrlPointArray[i].y / canvas.height))*2 - 1 };  // for the sound y coordinate ensure it's a number between +1 and -1  
 							sndCtrlPointArray[sndCtrlPointArray.length] = sndCtrlPoint;
 					} 
 					
-					wave = bezierCurvePath(sndCtrlPointArray, frequency, frequency, 1); 
+					wave = bezierCurvePath(sndCtrlPointArray, frequency, frequency, 0); 
 					playSoundWave(wave, audioCtx);
 				}
 			});
