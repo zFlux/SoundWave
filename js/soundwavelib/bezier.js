@@ -9,7 +9,7 @@ function bezierCurvePath(ctrlPointArray, numRenderedPoints, pathWidth, pathHeigh
 	
 	var bezierCoordArray = [];
 
-	if (ctrlPointArray.length > 3) {								// At least four points are necessary for a bezier
+	if (ctrlPointArray.length > 3) {										// At least four points are necessary for a bezier
 		
 
 		ctrlPointArray[0].x = pathWidth - ctrlPointArray[ctrlPointArray.length-1].x;				// In order to smoothly curve from the end into the beginning and also to always go through the point 0,0
