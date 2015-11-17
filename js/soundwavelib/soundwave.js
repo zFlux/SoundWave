@@ -1,6 +1,7 @@
 var SoundWave = function (canvas, audioCtx) {
   // Set the Drawing and Audio context for the object
   this.canvas = canvas;
+  this.canvas.width  = window.innerWidth;
   this.audioCtx = audioCtx
   
   // Register the function for drawing a sound wave with the oCanvas object
@@ -8,7 +9,8 @@ var SoundWave = function (canvas, audioCtx) {
   // Create the sound wave visual object
   this.soundWaveObj = this.canvas.display.soundWave({ctrlPoints: [], stroke: "1px #000", isVisible: 1});
   // Add it to the canvas
-  this.canvas.addChild(soundWaveObj);
+  this.canvas.addChild(this.soundWaveObj);
+  
 };
 
 
@@ -46,6 +48,19 @@ SoundWave.prototype.toggleVisibleCtrlPoints = function() {
   }
   
 };
+
+SoundWave.prototype.soundPoints = function(frequency) {
+	var sndCtrlPointArray = [];
+	
+	// Transpose the control points to values between -1 and 1
+	for (i = 0; i < this.soundWaveObj.ctrlPoints.length; i++) {
+	  var sndCtrlPoint = {x: (this.soundWaveObj.ctrlPoints[i].x / this.canvas.width) * frequency, y: ((this.soundWaveObj.ctrlPoints[i].y / this.canvas.height))*2 - 1 };  // for the sound y coordinate ensure it's a number between +1 and -1  
+	  sndCtrlPointArray[sndCtrlPointArray.length] = sndCtrlPoint;
+	} 
+	
+	return bezierCurvePath(sndCtrlPointArray, frequency, frequency, 0); 
+  
+}
 
 SoundWave.prototype.reset = function() {
   this.canvas.children = [];
