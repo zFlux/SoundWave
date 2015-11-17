@@ -14,7 +14,7 @@ function drawSoundwave(canvas) {
 					for (i = 2; i < this.ctrlPoints.length; i+=2) {								// Draw lines between every other two control points
 							canvas.moveTo(this.ctrlPoints[i-1].x, this.ctrlPoints[i-1].y);
 							canvas.lineTo(this.ctrlPoints[i].x, this.ctrlPoints[i].y);
-						}
+					}
 				}
 	 			
 				c = bezierCurvePath(this.ctrlPoints, $("#points").val(), canvas.canvas.width, canvas.canvas.height );
