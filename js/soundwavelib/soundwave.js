@@ -72,7 +72,7 @@ SoundWave.prototype.playSoundwave = function(frequency, duration) {
   var wave = this.soundPoints(frequency);
   var channels = 2;											// Make it a stereo sound
   var frameCount = this.audioCtx.sampleRate * duration;											
-  var myArrayBuffer = this.audioCtx.createBuffer(channels, frameCount, this.audioCtx.sampleRate);			// Create an empty duration seconds of stereo buffer at the sample rate of the AudioContext
+  var myArrayBuffer = this.audioCtx.createBuffer(channels, frameCount, this.audioCtx.sampleRate);	// Create an empty duration seconds of stereo buffer at the sample rate of the AudioContext
   
   for (var channel = 0; channel < channels; channel++) {						// Fill the buffer with my invented sound 
     var nowBuffering = myArrayBuffer.getChannelData(channel);						// This gives us the actual array that contains the data
@@ -83,9 +83,9 @@ SoundWave.prototype.playSoundwave = function(frequency, duration) {
     }
   }
   
-  var source = this.audioCtx.createBufferSource();								// Get an AudioBufferSourceNode to play the AudioBuffer
+  var source = this.audioCtx.createBufferSource();							// Get an AudioBufferSourceNode to play the AudioBuffer
   source.buffer = myArrayBuffer;									// set the buffer in the AudioBufferSourceNode
-  source.connect(this.audioCtx.destination);									// connect the AudioBufferSourceNode to the destination so we can hear the sound
+  source.connect(this.audioCtx.destination);								// connect the AudioBufferSourceNode to the destination so we can hear the sound
   source.start();											// start the source playing
 };
 
