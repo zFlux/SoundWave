@@ -10,8 +10,6 @@ function midPoint(p1, p2) {
   return {x: x, y: y};
 }
 
-
-// Custom bezier drawing function for this specific application.
 // Computes an array of equidistant dots along a bezier curve
 //  
 // ctrlPointArray: An array of bezier curve control coordinates
