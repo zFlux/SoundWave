@@ -31,18 +31,16 @@ $(document).ready(
       }
       
       else {
-	
 	var noteValue = Math.pow(2, keyToNote(key.which)  / 12);
 	var frequency = $("#points").val();
 	var soundPoints = soundWave.soundPoints(noteValue * frequency);
-	playSoundWave(soundPoints, audioCtx);
+	soundWave.playSoundwave(soundPoints, audioCtx);
       }
     });
     
     $( '#play' ).click ( function () { 
 	var frequency = $("#points").val();
 	var soundPoints = soundWave.soundPoints(frequency);
-	playSoundWave(soundPoints, audioCtx);
+	soundWave.playSoundwave(soundPoints, audioCtx);
     });
-    
   });
