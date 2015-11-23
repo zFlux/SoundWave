@@ -10,6 +10,45 @@ function midPoint(p1, p2) {
   return {x: x, y: y};
 }
 
+
+function evenlySpacedForwardMovingPath(inputArray, numRenderedPoints, pathWidth) {
+  // Once I have all the points for the bezier curve I need to loop through all of them looking for evenly spaced forward moving values of x
+  
+  // I should have the whole canvas for values of x
+  var len = pathWidth
+  var incr = len / numRenderedPoints;
+  var j = 0;
+  
+  var evenSpacedArray = [];
+  var i = 1;
+  while ( i < inputArray.length) {
+    // if the smaller of the adjacent points x values is equal to j for then store it
+    if(j == inputArray[i-1].x) { 
+      evenSpacedArray[evenSpacedArray.length] = {x:inputArray[i-1].x, y:inputArray[i-1].y}; 
+      j+=incr; 
+    }
+    // if j is between the two points then find j along the line between the two points and store the y value
+    else if(j <= inputArray[i].x  && j > inputArray[i-1] < j) {
+      // compute the slope
+      var m = (inputArray[i].y - inputArray[i-1].y) / (inputArray[i].x - inputArray[i-1].x)
+      // compute the value of y at x = j
+      var y = m*(j - inputArray[i-1].x) + inputArray[i-1].y
+      // store the point
+      evenSpacedArray[evenSpacedArray.length] = {x:j, y:y};
+      j+=incr; 
+    }
+    
+    // if j is smaller than the first points x value then increment j
+    else if (j < inputArray[i-1].x) { j+=incr; }
+    // if j is larger than the last points x value then increment i
+    else if (j > inputArray[i].x) { i++; }
+    
+  }
+  
+  return evenSpacedArray;
+}
+
+
 // Computes an array of equidistant dots along a bezier curve
 //  
 // ctrlPointArray: An array of bezier curve control coordinates
@@ -50,37 +89,7 @@ function bezierCurvePath(ctrlPointArray, numRenderedPoints, pathWidth, pathHeigh
     
   }
   
-  // Once I have all the points for the bezier curve I need to loop through all of them looking for evenly spaced forward moving values of x
+  return evenlySpacedForwardMovingPath(bezierCoordArray, numRenderedPoints, pathWidth);
   
-  // I should have the whole canvas for values of x
-  var len = pathWidth
-  var incr = len / numRenderedPoints;
-  var j = 0;
-  
-  var evenSpacedArray = [];
-  var i = 1;
-  while ( i < bezierCoordArray.length) {
-    // if the smaller of the adjacent points x values is equal to j for then store it
-    if(j == bezierCoordArray[i-1].x) { 
-      evenSpacedArray[evenSpacedArray.length] = {x:bezierCoordArray[i-1].x, y:bezierCoordArray[i-1].y}; 
-      j+=incr; 
-    }
-    // if j is between the two points then find j along the line between the two points and store the y value
-    else if(j <= bezierCoordArray[i].x  && j > bezierCoordArray[i-1] < j) {
-      // compute the slope
-      var m = (bezierCoordArray[i].y - bezierCoordArray[i-1].y) / (bezierCoordArray[i].x - bezierCoordArray[i-1].x)
-      // compute the value of y at x = j
-      var y = m*(j - bezierCoordArray[i-1].x) + bezierCoordArray[i-1].y
-      // store the point
-      evenSpacedArray[evenSpacedArray.length] = {x:j, y:y};
-      j+=incr; 
-    }
-    
-    // if j is smaller than the first points x value then increment j
-    else if (j < bezierCoordArray[i-1].x) { j+=incr; }
-    // if j is larger than the last points x value then increment i
-    else if (j > bezierCoordArray[i].x) { i++; }
-    
-  }
-  
-  return evenSpacedArray;}
+}
+
