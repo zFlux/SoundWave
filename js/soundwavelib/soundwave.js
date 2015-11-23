@@ -58,7 +58,7 @@ SoundWave.prototype.soundPoints = function(frequency) {
     sndCtrlPointArray[sndCtrlPointArray.length] = sndCtrlPoint;
   } 
   
-  return bezierCurvePath(sndCtrlPointArray, frequency, frequency, 0); 
+  return hermiteCurvePath(sndCtrlPointArray, frequency, frequency, 0); 
   
 };
 
@@ -108,7 +108,7 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
     }
   }
   
-  c = bezierCurvePath(this.ctrlPoints, $("#points").val(), canvas.canvas.width, canvas.canvas.height );
+  c = hermiteCurvePath(this.ctrlPoints, $("#points").val(), canvas.canvas.width, canvas.canvas.height );
   canvas.strokeStyle = BLACK;
   for (t = 0; t < c.length ; t++) {
     canvas.fillRect(c[t].x,c[t].y,1,1);										// Fill a pixel
