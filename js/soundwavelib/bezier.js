@@ -104,26 +104,17 @@ function hermiteCurvePath(inputCtrlPointArray, numRenderedPoints, pathWidth, pat
     
     var t = 0;
     var n = numRenderedPoints / (ctrlPointArray.length / 2);
-    var a = 0.5;
+    var a = 1;
     
-    for(j = 0; j < ctrlPointArray.length -1; j+=1) {
+    for(j = 0; j < Math.round(ctrlPointArray.length/4); j+=1) {
       
       var p0 = ctrlPointArray[j];
-      var p1 = ctrlPointArray[j+1];
-      var m0 = {x:0, y:0};
-      var m1 = {x:0, y:0};
+      var m0 = ctrlPointArray[j+1];
+      var p1 = ctrlPointArray[j+2];
+      var m1 = ctrlPointArray[j+3];
       
-      if ( j == 0 ) {
-	m0 = {x: p1.x * a, y: p1.y * a};
-      } else {
-	m0 = {x: (p1.x - ctrlPointArray[j-1].x)*a, y: (p1.y - ctrlPointArray[j-1].y)*a};
-      }
       
-      if (j == ctrlPointArray.length) {
-	m1 = {x: -p0.x *a, y: -p0.y*a};
-      } else {
-	m1 = {x: (ctrlPointArray[j+1].x - p0.x)*a, y: (ctrlPointArray[j+1].y - p0.y)*a};
-      }
+
 
       for(i = 0; i < n; i++) 
       {

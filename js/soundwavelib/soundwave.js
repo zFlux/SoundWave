@@ -7,7 +7,7 @@ var SoundWave = function (canvas, audioCtx) {
   // Register the function for drawing a sound wave with the oCanvas object
   this.canvas.display.register("soundWave", {shapeType: "soundWave", isVisible: 1}, this.drawSoundwave);
   // Create the sound wave visual object
-  this.soundWaveObj = this.canvas.display.soundWave({ctrlPoints: [], stroke: "1px #000", isVisible: 1});
+  this.soundWaveObj = this.canvas.display.soundWave({ctrlPoints: [], midPoints: [], stroke: "1px #000", isVisible: 1});
   // Add it to the canvas
   this.canvas.addChild(this.soundWaveObj);
   
@@ -58,7 +58,7 @@ SoundWave.prototype.soundPoints = function(frequency) {
     sndCtrlPointArray[sndCtrlPointArray.length] = sndCtrlPoint;
   } 
   
-  return hermiteCurvePath(sndCtrlPointArray, frequency, frequency, 0); 
+  return bezierCurvePath(sndCtrlPointArray, frequency, frequency, 0); 
   
 };
 
@@ -108,7 +108,7 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
     }
   }
   
-  c = hermiteCurvePath(this.ctrlPoints, $("#points").val(), canvas.canvas.width, canvas.canvas.height );
+  c = bezierCurvePath(this.ctrlPoints, $("#points").val(), canvas.canvas.width, canvas.canvas.height );
   canvas.strokeStyle = BLACK;
   for (t = 0; t < c.length ; t++) {
     canvas.fillRect(c[t].x,c[t].y,1,1);										// Fill a pixel
