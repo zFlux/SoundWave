@@ -17,9 +17,7 @@ $(document).ready(
 
     canvas.bind("dblclick", function(click) {
       if (click.which == RIGHT_MOUSE) {
-        if (!soundWave.isExistingCtrlPoint(canvas.mouse.x, canvas.mouse.y)) {
-          soundWave.createCtrlPoint(canvas.mouse.x, canvas.mouse.y);
-        }
+        soundWave.addCtrlPoint(canvas.mouse.x, canvas.mouse.y);
       }
     });
 

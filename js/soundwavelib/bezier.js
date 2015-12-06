@@ -64,44 +64,26 @@ function evenlySpacedForwardMovingPath(inputArray, numRenderedPoints, pathWidth)
   return evenSpacedArray;
 }
 
-
 // Computes an array of equidistant dots along a bezier curve
 //
-// ctrlPointArray: An array of bezier curve control coordinates
+// ctrlLineArray: An array of bezier curve control tangent lines
 // numRenderedPoints: The number of points to render
 // pathWidth: The width the curve must cover
 // pathHeight: The height the curve must cover - this is only used for the first point
-function bezierCurvePath(ctrlPointArray, numRenderedPoints, pathWidth, pathHeight) {
+function bezierCurvePath(ctrlLineArray, numRenderedPoints, pathWidth, pathHeight) {
 
   var bezierCoordArray = [];
 
-  if (ctrlPointArray.length > 0 && ctrlPointArray.length % 2 == 0) { // At least four points are necessary for a bezier
-
-    ctrlPointArray[0].x = pathWidth - ctrlPointArray[ctrlPointArray.length - 1].x
-    ctrlPointArray[0].y = pathHeight - ctrlPointArray[ctrlPointArray.length - 1].y // In order to smoothly curve from the end into the beginning and also to always go through the point 0,0
-      // Set the first point's x y value so that it is the compliment of the last point's x y value
-    var endPoint = midPoint(ctrlPointArray[0], ctrlPointArray[ctrlPointArray.length - 1]);
-    endPoint.x = 0;
-    var n = numRenderedPoints / (ctrlPointArray.length / 4);
+    var n = numRenderedPoints / ctrlLineArray.length;
 
     // curves are drawn using midpoints to ensure a continuous smooth bezier
-    for (i = 0; i < ctrlPointArray.length - 1; i += 2) {
-      startPoint = endPoint;
-
-      if (i == ctrlPointArray.length - 2) {
-        endPoint = midPoint(ctrlPointArray[0], ctrlPointArray[ctrlPointArray.length - 1]);
-        endPoint.x = pathWidth;
-      } else {
-        endPoint = midPoint(ctrlPointArray[i + 1], ctrlPointArray[i + 2]); // and the last point is the midpoint between point 3 and point 4
-      }
+    for (i = 0; i < ctrlLineArray.length - 1; i++) {
 
       for (t = 0; t <= 1; t += (1 / n)) {
-        bezierCoordArray[bezierCoordArray.length] = computeBezierPoint(t, startPoint, ctrlPointArray[i], ctrlPointArray[i + 1], endPoint);
+        bezierCoordArray[bezierCoordArray.length] = computeBezierPoint(t, ctrlLineArray[i].line.midpoint, ctrlLineArray[i].line.p2, ctrlLineArray[i + 1].line.p1, ctrlLineArray[i + 1].line.midpoint);
       }
 
     }
-
-  }
 
   return evenlySpacedForwardMovingPath(bezierCoordArray, numRenderedPoints, pathWidth);
 

@@ -11,8 +11,7 @@ var SoundWave = function(canvas, audioCtx) {
   }, this.drawSoundwave);
   // Create the sound wave visual object
   this.soundWaveObj = this.canvas.display.soundWave({
-    ctrlPoints: [],
-    midPoints: [],
+    ctrlLines: [],
     stroke: "1px #000",
     isVisible: 1
   });
@@ -21,36 +20,40 @@ var SoundWave = function(canvas, audioCtx) {
 
 };
 
-
-SoundWave.prototype.isExistingCtrlPoint = function(mouseX, mouseY) {
-
-  if (this.soundWaveObj.ctrlPoints.length > 0) {
-    for (i = 0; i < this.soundWaveObj.ctrlPoints.length; i++) {
-      if (Math.pow(mouseX - this.soundWaveObj.ctrlPoints[i].x, 2) + Math.pow(mouseY - this.soundWaveObj.ctrlPoints[i].y, 2) < Math.pow(this.soundWaveObj.ctrlPoints[i].radius, 2)) {
-        return 1;
-      }
-    }
+SoundWave.prototype.addCtrlPoint = function(mouseX, mouseY) {
+  // if control line array is empty create the first and last control lines
+  if (this.soundWaveObj.ctrlLines.length == 0) {
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length] = new LineWithMidpoint(this.canvas);
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 1].createPoint({
+      x: -mouseX,
+      y: this.canvas.height - mouseY
+    });
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 1].createPoint({
+      x: mouseX,
+      y: mouseY
+    });
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length] = new LineWithMidpoint(this.canvas);
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 1].createPoint({
+      x: this.canvas.width - mouseX,
+      y: mouseY
+    });
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 1].createPoint({
+      x: this.canvas.width + mouseX,
+      y: this.canvas.height - mouseY
+    });
+  } else if (this.soundWaveObj.ctrlLines.length > 1 && this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2].isFull()) {
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length] = this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 1];
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2] = new LineWithMidpoint(this.canvas);
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2].createPoint({
+      x: mouseX,
+      y: mouseY
+    });
+  } else {
+    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2].createPoint({
+      x: mouseX,
+      y: mouseY
+    });
   }
-  return 0;
-};
-
-SoundWave.prototype.createCtrlPoint = function(mouseX, mouseY) {
-  // create control point
-  var ctrlPoint = this.canvas.display.ellipse({
-    x: mouseX,
-    y: mouseY,
-    radius: 5,
-    stroke: "1px #000"
-  });
-  var dragOptions = {
-    changeZindex: false
-  };
-  ctrlPoint.dragAndDrop(dragOptions);
-  // add control point to the array
-  this.soundWaveObj.ctrlPoints[this.soundWaveObj.ctrlPoints.length] = ctrlPoint;
-  // add it to the canvas
-  this.canvas.addChild(ctrlPoint);
-
 };
 
 SoundWave.prototype.toggleVisibleCtrlPoints = function() {
@@ -65,18 +68,13 @@ SoundWave.prototype.toggleVisibleCtrlPoints = function() {
 };
 
 SoundWave.prototype.soundPoints = function(frequency) {
-  var sndCtrlPointArray = [];
+  var sndCtrlLineArray = [];
 
-  // Transpose the control points to values between -1 and 1
-  for (i = 0; i < this.soundWaveObj.ctrlPoints.length; i++) {
-    var sndCtrlPoint = {
-      x: (this.soundWaveObj.ctrlPoints[i].x / this.canvas.width) * frequency,
-      y: ((this.soundWaveObj.ctrlPoints[i].y / this.canvas.height)) * 2 - 1
-    }; // for the sound y coordinate ensure it's a number between +1 and -1
-    sndCtrlPointArray[sndCtrlPointArray.length] = sndCtrlPoint;
+  for (i = 0; i < this.soundWaveObj.ctrlLines.length; i++) {
+    sndCtrlLineArray[sndCtrlLineArray.length] = this.soundWaveObj.ctrlLines[i].returnSoundLine(frequency);
   }
 
-  return bezierCurvePath(sndCtrlPointArray, frequency, frequency, 0);
+  return bezierCurvePath(sndCtrlLineArray, frequency, frequency, 0);
 
 };
 
@@ -113,30 +111,41 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
   var NO = 0;
   var YES = 1;
 
-  if (this.isVisible == YES) {
-    this.strokeColor = BLACK;
-  } else {
-    this.strokeColor = WHITE;
-  } // Set the color to white if the visible flag is off
-  for (i = 0; i < this.ctrlPoints.length; i++) {
-    this.ctrlPoints[i].strokeColor = this.strokeColor;
-  } // Update the visibility of the all the control points
+  this.strokeColor = BLACK;
+
   canvas.strokeStyle = this.strokeColor; // Set the canvas color
   canvas.lineWidth = this.strokeWidth;
 
-  canvas.beginPath();
-  if (this.isVisible == YES) {
-    for (i = 2; i < this.ctrlPoints.length; i += 2) { // Draw lines between every other two control points
-      canvas.moveTo(this.ctrlPoints[i - 1].x, this.ctrlPoints[i - 1].y);
-      canvas.lineTo(this.ctrlPoints[i].x, this.ctrlPoints[i].y);
+  // first two control lines with all points or more control lines so long as the second last one has all points
+  if ((this.ctrlLines.length == 2 && this.ctrlLines[this.ctrlLines.length - 1].isFull()) || (this.ctrlLines.length > 2 && this.ctrlLines[this.ctrlLines.length - 2].isFull())) {
+
+
+    // check if we're dragging p2 of the first control line or p1 of the last
+    if (this.ctrlLines[0].line.p2.dragging == true) {
+      this.ctrlLines[this.ctrlLines.length-1].line.p1.x =  this.ctrlLines[0].line.p1.x + canvas.canvas.width;
+      this.ctrlLines[this.ctrlLines.length-1].line.p1.y =  this.ctrlLines[0].line.p1.y;
+      this.ctrlLines[this.ctrlLines.length-1].line.p2.x = this.ctrlLines[0].line.p2.x + canvas.canvas.width;
+      this.ctrlLines[this.ctrlLines.length-1].line.p2.y = this.ctrlLines[0].line.p2.y;
+
     }
+
+    canvas.beginPath();
+    c = bezierCurvePath(this.ctrlLines, $("#points").val(), canvas.canvas.width, canvas.canvas.height);
+    canvas.strokeStyle = BLACK;
+    for (t = 0; t < c.length; t++) {
+      canvas.fillRect(c[t].x, c[t].y, 1, 1); // Fill a pixel
+    }
+
+    canvas.moveTo(this.ctrlLines[this.ctrlLines.length-1].line.p1.x, this.ctrlLines[this.ctrlLines.length-1].line.p1.y);
+    canvas.lineTo(this.ctrlLines[this.ctrlLines.length-1].line.p2.x, this.ctrlLines[this.ctrlLines.length-1].line.p2.y);
+
+    canvas.stroke();
+    canvas.closePath();
+
+
   }
 
-  c = bezierCurvePath(this.ctrlPoints, $("#points").val(), canvas.canvas.width, canvas.canvas.height);
-  canvas.strokeStyle = BLACK;
-  for (t = 0; t < c.length; t++) {
-    canvas.fillRect(c[t].x, c[t].y, 1, 1); // Fill a pixel
-  }
-  canvas.stroke();
-  canvas.closePath();
+
+
+
 };
