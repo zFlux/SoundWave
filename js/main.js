@@ -14,14 +14,10 @@ $(document).ready(
     });
     var audioCtx = new(window.AudioContext || window.webkitAudioContext)(); // Global audio context
     var soundWave = new SoundWave(canvas, audioCtx);
-    var midpointLine = new MidpointLine(canvas);
 
     canvas.bind("dblclick", function(click) {
       if (click.which == RIGHT_MOUSE) {
-        if (!soundWave.isExistingCtrlPoint(canvas.mouse.x, canvas.mouse.y)) {
-          //soundWave.createCtrlPoint(canvas.mouse.x, canvas.mouse.y);
-          midpointLine.setMidpointLine({x:0, y:0}, {x:canvas.mouse.x, y:canvas.mouse.y});
-        }
+        soundWave.addCtrlPoint(canvas.mouse.x, canvas.mouse.y);
       }
     });
 

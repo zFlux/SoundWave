@@ -1,106 +1,115 @@
-var MidpointLine = function(canvas) {
+var LineWithMidpoint = function(canvas) {
   // Set the Drawing context for the object
   this.canvas = canvas;
 
   // Register the function for drawing a midpoint line with the oCanvas object
-  this.canvas.display.register("midpointLine", {
-    shapeType: "midpointLine",
+  this.canvas.display.register("lineWithMidpoint", {
+    shapeType: "lineWithMidpoint",
     isVisible: 1
-  }, this.drawMidpointLine);
+  }, this.drawLineWithMidpoint);
 
   // Create the visual object
-  this.midpointObj = this.canvas.display.midpointLine({
-    p1: this.canvas.display.ellipse({
-      x: 0,
-      y: 0,
-      radius: 5,
-      stroke: "1px #000"
-    }),
-    p2: this.canvas.display.ellipse({
-      x: 0,
-      y: 0,
-      radius: 5,
-      stroke: "1px #000"
-    }),
-    midpoint: this.canvas.display.ellipse({
-      x: 0,
-      y: 0,
-      radius: 5,
-      stroke: "1px #000",
-      moving: 0
-    }),
+  this.line = this.canvas.display.lineWithMidpoint({
+    p1: null,
+    p2: null,
+    midpoint: null,
     stroke: "1px #000",
     isVisible: 1
   });
 
-  var dragOptions = {
-    changeZindex: false
-  };
-  this.midpointObj.p1.dragAndDrop(dragOptions);
-  this.midpointObj.p2.dragAndDrop(dragOptions);
-  this.midpointObj.midpoint.dragAndDrop({
-    move: function() {
-      this.moving = 1;
-    },
-    end: function() {
-      this.moving = 0;
-    }
-  });
-
-  this.midpointObj.addChild(this.midpointObj.p1);
-  this.midpointObj.addChild(this.midpointObj.p2);
-  this.midpointObj.addChild(this.midpointObj.midpoint);
-
-  this.canvas.addChild(this.midpointObj);
+  this.canvas.addChild(this.line);
 };
 
-MidpointLine.prototype.drawMidpointLine = function(canvas) {
+LineWithMidpoint.prototype.drawLineWithMidpoint = function(canvas) {
   var WHITE = "#FFF";
   var BLACK = "#000";
   var NO = 0;
   var YES = 1;
 
-  if (this.isVisible == YES) {
-    this.strokeColor = BLACK;
-  } else {
-    this.strokeColor = WHITE;
-  }
-  canvas.strokeStyle = this.strokeColor; // Set the canvas color
-  canvas.lineWidth = this.strokeWidth;
+  canvas.strokeStyle = BLACK; // Set the canvas color
 
-  canvas.beginPath();
+  // if all the peices exist then do some work
+  if (this.p1 && this.p2 && this.midpoint && this.isVisible == YES) {
+      canvas.beginPath();
 
-  // if one of the endpoints are being dragged recompute the midpoint
-  if (this.isVisible == YES && this.midpoint.moving != YES) {
+    // if one of the endpoints are being dragged recompute the other endpoint
+    if (this.p1.dragging == YES) {
+      var diffx = this.p1.x - this.midpoint.x;
+      var diffy = this.p1.y - this.midpoint.y;
+      this.p2.x = this.midpoint.x - diffx;
+      this.p2.y = this.midpoint.y - diffy;
+    }
+
+    if (this.p2.dragging == YES) {
+      var diffx = this.p2.x - this.midpoint.x;
+      var diffy = this.p2.y - this.midpoint.y;
+      this.p1.x = this.midpoint.x - diffx;
+      this.p1.y = this.midpoint.y - diffy;
+    }
+
+    // If the midpoint is being dragged then recompute the endpoints
+    if (this.midpoint.dragging == YES) {
+      var tempMidpoint = {
+        x: (this.p1.x + this.p2.x) / 2,
+        y: (this.p1.y + this.p2.y) / 2
+      }
+      var diffx = this.midpoint.x - tempMidpoint.x;
+      var diffy = this.midpoint.y - tempMidpoint.y;
+      this.p1.x = this.p1.x + diffx;
+      this.p1.y = this.p1.y + diffy;
+      this.p2.x = this.p2.x + diffx;
+      this.p2.y = this.p2.y + diffy;
+    }
     canvas.moveTo(this.p1.x, this.p1.y);
     canvas.lineTo(this.p2.x, this.p2.y);
-    this.midpoint.x = (this.p1.x + this.p2.x) / 2;
-    this.midpoint.y = (this.p1.y + this.p2.y) / 2;
-  }
-
-  // If the midpoint is being dragged then recompute the endpoints
-  if (this.isVisible == YES && this.midpoint.moving == YES) {
-    var tempMidpoint = {x: (this.p1.x + this.p2.x) / 2, y: (this.p1.y + this.p2.y) / 2 }
-    var diffx = this.midpoint.x - tempMidpoint.x;
-    var diffy = this.midpoint.y - tempMidpoint.y;
-    this.p1.x = this.p1.x + diffx;
-    this.p1.y = this.p1.y + diffy;
-    this.p2.x = this.p2.x + diffx;
-    this.p2.y = this.p2.y + diffy;
-    canvas.moveTo(this.p1.x, this.p1.y);
-    canvas.lineTo(this.p2.x, this.p2.y);
+    canvas.stroke();
+    canvas.closePath();
   }
 
 
-  canvas.stroke();
-  canvas.closePath();
 };
 
-MidpointLine.prototype.setMidpointLine = function(p1, p2) {
-  this.midpointObj.p1.x = p1.x;
-  this.midpointObj.p1.y = p1.y;
-  this.midpointObj.p2.x = p2.x;
-  this.midpointObj.p2.y = p2.y;
-  this.midpointObj.midpoint.x = (p1.x + p2.x) / 2;
-  this.midpointObj.midpoint.y = (p1.y + p2.y) / 2;
+LineWithMidpoint.prototype.createPoint = function(p) {
+
+  if (!this.isExistingPoint(p.x, p.y)) {
+    if (!this.line.p1) {
+      this.line.p1 = this.canvas.display.ellipse({x: p.x,y: p.y,radius: 5,stroke: "1px #000"});
+      this.line.p1.dragAndDrop({move: function() {this.dragging = 1;},end: function() {this.dragging = 0;}});
+      this.canvas.addChild(this.line.p1);
+    } else if (!this.line.p2) {
+      this.line.p2 = this.canvas.display.ellipse({x: p.x,y: p.y,radius: 5,stroke: "1px #000"});
+      this.line.p2.dragAndDrop({move: function() {this.dragging = 1;},end: function() {this.dragging = 0;}});
+      this.canvas.addChild(this.line.p2);
+    }
+    if (this.line.p1 && this.line.p2) {
+      this.line.midpoint = this.canvas.display.ellipse({x: (this.line.p1.x + this.line.p2.x) / 2,y: (this.line.p1.y + this.line.p2.y) / 2,radius: 5,stroke: "1px #000"});
+      this.line.midpoint.dragAndDrop({move: function() {this.dragging = 1;},end: function() {this.dragging = 0;}});
+      this.canvas.addChild(this.line.midpoint);
+    }
+  }
+
+};
+
+LineWithMidpoint.prototype.isExistingPoint = function(x, y) {
+
+  if (this.line.p1) {
+    if (Math.pow(x - this.line.p1.x, 2) + Math.pow(y - this.line.p1.y, 2) < Math.pow(5, 2)) {
+      return 1;
+    }
+  }
+
+  if (this.line.p2) {
+    if (Math.pow(x - this.line.p2.x, 2) + Math.pow(y - this.line.p2.y, 2) < Math.pow(5, 2)) {
+      return 1;
+    }
+  }
+
+  return 0;
+};
+
+LineWithMidpoint.prototype.isFull = function() {
+  if (this.line.p1 && this.line.p2 && this.line.midpoint) {
+    return true;
+  }
+  return false;
 };
