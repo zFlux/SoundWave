@@ -68,18 +68,13 @@ SoundWave.prototype.toggleVisibleCtrlPoints = function() {
 };
 
 SoundWave.prototype.soundPoints = function(frequency) {
-  var sndCtrlPointArray = [];
+  var sndCtrlLineArray = [];
 
-  // Transpose the control points to values between -1 and 1
-  for (i = 0; i < this.soundWaveObj.ctrlPoints.length; i++) {
-    var sndCtrlPoint = {
-      x: (this.soundWaveObj.ctrlPoints[i].x / this.canvas.width) * frequency,
-      y: ((this.soundWaveObj.ctrlPoints[i].y / this.canvas.height)) * 2 - 1
-    }; // for the sound y coordinate ensure it's a number between +1 and -1
-    sndCtrlPointArray[sndCtrlPointArray.length] = sndCtrlPoint;
+  for (i = 0; i < this.soundWaveObj.ctrlLines.length; i++) {
+    sndCtrlLineArray[sndCtrlLineArray.length] = this.soundWaveObj.ctrlLines[i].returnSoundLine(frequency);
   }
 
-  return bezierCurvePath(sndCtrlPointArray, frequency, frequency, 0);
+  return bezierCurvePath(sndCtrlLineArray, frequency, frequency, 0);
 
 };
 
@@ -127,12 +122,11 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
 
     // check if we're dragging p2 of the first control line or p1 of the last
     if (this.ctrlLines[0].line.p2.dragging == true) {
-      this.ctrlLines[this.ctrlLines.length-1].line.p1.x =  canvas.canvas.width - this.ctrlLines[0].line.p2.x;
-      this.ctrlLines[this.ctrlLines.length-1].line.p1.y =  this.ctrlLines[0].line.p2.y;
-      var diffx = this.ctrlLines[this.ctrlLines.length-1].line.p1.x - this.ctrlLines[this.ctrlLines.length-1].line.midpoint.x;
-      var diffy = this.ctrlLines[this.ctrlLines.length-1].line.p1.y - this.ctrlLines[this.ctrlLines.length-1].line.midpoint.y;
-      this.ctrlLines[this.ctrlLines.length-1].line.p2.x = this.ctrlLines[this.ctrlLines.length-1].line.midpoint.x + diffx;
-      this.ctrlLines[this.ctrlLines.length-1].line.p2.y = this.ctrlLines[this.ctrlLines.length-1].line.midpoint.y + diffy;
+      this.ctrlLines[this.ctrlLines.length-1].line.p1.x =  this.ctrlLines[0].line.p1.x + canvas.canvas.width;
+      this.ctrlLines[this.ctrlLines.length-1].line.p1.y =  this.ctrlLines[0].line.p1.y;
+      this.ctrlLines[this.ctrlLines.length-1].line.p2.x = this.ctrlLines[0].line.p2.x + canvas.canvas.width;
+      this.ctrlLines[this.ctrlLines.length-1].line.p2.y = this.ctrlLines[0].line.p2.y;
+
     }
 
     canvas.beginPath();
@@ -141,6 +135,10 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
     for (t = 0; t < c.length; t++) {
       canvas.fillRect(c[t].x, c[t].y, 1, 1); // Fill a pixel
     }
+
+    canvas.moveTo(this.ctrlLines[this.ctrlLines.length-1].line.p1.x, this.ctrlLines[this.ctrlLines.length-1].line.p1.y);
+    canvas.lineTo(this.ctrlLines[this.ctrlLines.length-1].line.p2.x, this.ctrlLines[this.ctrlLines.length-1].line.p2.y);
+
     canvas.stroke();
     canvas.closePath();
 

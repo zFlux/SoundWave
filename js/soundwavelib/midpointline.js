@@ -30,7 +30,7 @@ LineWithMidpoint.prototype.drawLineWithMidpoint = function(canvas) {
 
   // if all the peices exist then do some work
   if (this.p1 && this.p2 && this.midpoint && this.isVisible == YES) {
-      canvas.beginPath();
+    canvas.beginPath();
 
     // if one of the endpoints are being dragged recompute the other endpoint
     if (this.p1.dragging == YES) {
@@ -73,21 +73,79 @@ LineWithMidpoint.prototype.createPoint = function(p) {
 
   if (!this.isExistingPoint(p.x, p.y)) {
     if (!this.line.p1) {
-      this.line.p1 = this.canvas.display.ellipse({x: p.x,y: p.y,radius: 5,stroke: "1px #000"});
-      this.line.p1.dragAndDrop({move: function() {this.dragging = 1;},end: function() {this.dragging = 0;}});
+      this.line.p1 = this.canvas.display.ellipse({
+        x: p.x,
+        y: p.y,
+        radius: 5,
+        stroke: "1px #000"
+      });
+      this.line.p1.dragAndDrop({
+        move: function() {
+          this.dragging = 1;
+        },
+        end: function() {
+          this.dragging = 0;
+        }
+      });
       this.canvas.addChild(this.line.p1);
     } else if (!this.line.p2) {
-      this.line.p2 = this.canvas.display.ellipse({x: p.x,y: p.y,radius: 5,stroke: "1px #000"});
-      this.line.p2.dragAndDrop({move: function() {this.dragging = 1;},end: function() {this.dragging = 0;}});
+      this.line.p2 = this.canvas.display.ellipse({
+        x: p.x,
+        y: p.y,
+        radius: 5,
+        stroke: "1px #000"
+      });
+      this.line.p2.dragAndDrop({
+        move: function() {
+          this.dragging = 1;
+        },
+        end: function() {
+          this.dragging = 0;
+        }
+      });
       this.canvas.addChild(this.line.p2);
     }
     if (this.line.p1 && this.line.p2) {
-      this.line.midpoint = this.canvas.display.ellipse({x: (this.line.p1.x + this.line.p2.x) / 2,y: (this.line.p1.y + this.line.p2.y) / 2,radius: 5,stroke: "1px #000"});
-      this.line.midpoint.dragAndDrop({move: function() {this.dragging = 1;},end: function() {this.dragging = 0;}});
+      this.line.midpoint = this.canvas.display.ellipse({
+        x: (this.line.p1.x + this.line.p2.x) / 2,
+        y: (this.line.p1.y + this.line.p2.y) / 2,
+        radius: 5,
+        stroke: "1px #000"
+      });
+      this.line.midpoint.dragAndDrop({
+        move: function() {
+          this.dragging = 1;
+        },
+        end: function() {
+          this.dragging = 0;
+        }
+      });
       this.canvas.addChild(this.line.midpoint);
     }
   }
 
+};
+
+// Returns the control line given a y between -1 and 1 and an x that between 0 and frequency
+LineWithMidpoint.prototype.returnSoundLine = function(frequency) {
+
+  var soundLine = {
+    line: {
+      p1: {
+        x: (this.line.p1.x / this.canvas.width) * frequency,
+        y: (this.line.p1.y / this.canvas.height) * 2 - 1
+      },
+      p2: {
+        x: (this.line.p2.x / this.canvas.width) * frequency,
+        y: (this.line.p2.y / this.canvas.height) * 2 - 1
+      },
+      midpoint: {
+        x: (this.line.midpoint.x / this.canvas.width) * frequency,
+        y: (this.line.midpoint.y / this.canvas.height) * 2 - 1
+      }
+    }
+  }
+  return soundLine;
 };
 
 LineWithMidpoint.prototype.isExistingPoint = function(x, y) {
