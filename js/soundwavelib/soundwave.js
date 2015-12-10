@@ -87,12 +87,13 @@ SoundWave.prototype.reset = function() {
 SoundWave.prototype.loadSoundwave = function() {
   var request = new XMLHttpRequest();
 
-request.open( 'GET', '/audio/clarinet.wav', true );
+request.open( 'GET', '/saudio/clarinet.wav', true );
 request.responseType = 'arraybuffer';
 
 request.onload = function() {
   var r = request.response;
-
+  var source = this.audioCtx.createBufferSource();
+  source.buffer = this.audioCtx.createBuffer(request.response, false);
 }
 
 request.send();
