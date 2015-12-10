@@ -84,6 +84,20 @@ SoundWave.prototype.reset = function() {
   this.soundWaveObj.ctrlPoints = [];
 };
 
+SoundWave.prototype.loadSoundwave = function() {
+  var request = new XMLHttpRequest();
+
+request.open( 'GET', '/audio/clarinet.wav', true );
+request.responseType = 'arraybuffer';
+
+request.onload = function() {
+  var r = request.response;
+
+}
+
+request.send();
+}
+
 SoundWave.prototype.playSoundwave = function(frequency, duration) {
   var wave = this.soundPoints(frequency);
   var channels = 2; // Make it a stereo sound
