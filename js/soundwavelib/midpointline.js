@@ -1,22 +1,10 @@
 var LineWithMidpoint = function(canvas) {
   // Set the Drawing context for the object
   this.canvas = canvas;
-
   // Register the function for drawing a midpoint line with the oCanvas object
-  this.canvas.display.register("lineWithMidpoint", {
-    shapeType: "lineWithMidpoint",
-    isVisible: 1
-  }, this.drawLineWithMidpoint);
-
+  this.canvas.display.register("lineWithMidpoint", {shapeType: "lineWithMidpoint",isVisible: 1}, this.drawLineWithMidpoint);
   // Create the visual object
-  this.line = this.canvas.display.lineWithMidpoint({
-    p1: null,
-    p2: null,
-    midpoint: null,
-    stroke: "1px #000",
-    isVisible: 1
-  });
-
+  this.line = this.canvas.display.lineWithMidpoint({p1: null,p2: null,midpoint: null,stroke: "1px #000",isVisible: 1});
   this.canvas.addChild(this.line);
 };
 
@@ -25,13 +13,10 @@ LineWithMidpoint.prototype.drawLineWithMidpoint = function(canvas) {
   var BLACK = "#000";
   var NO = 0;
   var YES = 1;
-
-  canvas.strokeStyle = BLACK; // Set the canvas color
-
+  canvas.strokeStyle = BLACK;
   // if all the peices exist then do some work
   if (this.p1 && this.p2 && this.midpoint && this.isVisible == YES) {
     canvas.beginPath();
-
     // if one of the endpoints are being dragged recompute the other endpoint
     if (this.p1.dragging == YES) {
       var diffx = this.p1.x - this.midpoint.x;
@@ -39,14 +24,12 @@ LineWithMidpoint.prototype.drawLineWithMidpoint = function(canvas) {
       this.p2.x = this.midpoint.x - diffx;
       this.p2.y = this.midpoint.y - diffy;
     }
-
     if (this.p2.dragging == YES) {
       var diffx = this.p2.x - this.midpoint.x;
       var diffy = this.p2.y - this.midpoint.y;
       this.p1.x = this.midpoint.x - diffx;
       this.p1.y = this.midpoint.y - diffy;
     }
-
     // If the midpoint is being dragged then recompute the endpoints
     if (this.midpoint.dragging == YES) {
       var tempMidpoint = {
@@ -65,8 +48,6 @@ LineWithMidpoint.prototype.drawLineWithMidpoint = function(canvas) {
     canvas.stroke();
     canvas.closePath();
   }
-
-
 };
 
 LineWithMidpoint.prototype.createPoint = function(p) {
