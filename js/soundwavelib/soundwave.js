@@ -9,15 +9,16 @@ var SoundWave = function(canvas, audioCtx) {
     shapeType: "soundWave",
     isVisible: 1
   }, this.drawSoundwave);
+
   // Create the sound wave visual object
   this.soundWaveObj = this.canvas.display.soundWave({
     ctrlLines: [],
     stroke: "1px #000",
     isVisible: 1
   });
+
   // Add it to the canvas
   this.canvas.addChild(this.soundWaveObj);
-
 };
 
 SoundWave.prototype.addCtrlPoint = function(mouseX, mouseY) {
@@ -110,9 +111,7 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
   var BLACK = "#000";
   var NO = 0;
   var YES = 1;
-
   this.strokeColor = BLACK;
-
   canvas.strokeStyle = this.strokeColor; // Set the canvas color
   canvas.lineWidth = this.strokeWidth;
 
@@ -138,14 +137,7 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
 
     canvas.moveTo(this.ctrlLines[this.ctrlLines.length-1].line.p1.x, this.ctrlLines[this.ctrlLines.length-1].line.p1.y);
     canvas.lineTo(this.ctrlLines[this.ctrlLines.length-1].line.p2.x, this.ctrlLines[this.ctrlLines.length-1].line.p2.y);
-
     canvas.stroke();
     canvas.closePath();
-
-
   }
-
-
-
-
 };

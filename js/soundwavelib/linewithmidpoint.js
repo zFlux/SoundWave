@@ -51,7 +51,6 @@ LineWithMidpoint.prototype.drawLineWithMidpoint = function(canvas) {
 };
 
 LineWithMidpoint.prototype.createPoint = function(p) {
-
   if (!this.isExistingPoint(p.x, p.y)) {
     if (!this.line.p1) {
       this.line.p1 = this.canvas.display.ellipse({
@@ -104,12 +103,10 @@ LineWithMidpoint.prototype.createPoint = function(p) {
       this.canvas.addChild(this.line.midpoint);
     }
   }
-
 };
 
-// Returns the control line given a y between -1 and 1 and an x that between 0 and frequency
+// Returns the control line given a y between -1 and 1 and an x between 0 and frequency
 LineWithMidpoint.prototype.returnSoundLine = function(frequency) {
-
   var soundLine = {
     line: {
       p1: {

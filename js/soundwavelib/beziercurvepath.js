@@ -12,7 +12,6 @@ function bezierCurvePath(ctrlLineArray, numRenderedPoints, pathWidth, pathHeight
     for (t = 0; t <= 1; t += (1 / n)) {
       bezierCoordArray[bezierCoordArray.length] = computeBezierPoint(t, ctrlLineArray[i].line.midpoint, ctrlLineArray[i].line.p2, ctrlLineArray[i + 1].line.p1, ctrlLineArray[i + 1].line.midpoint);
     }
-
   }
   return evenlySpacedForwardMovingPath(bezierCoordArray, numRenderedPoints, pathWidth);
 }
@@ -35,7 +34,6 @@ function computeBezierPoint(t, p1, p2, p3, p4) {
 function evenlySpacedForwardMovingPath(inputArray, numRenderedPoints, pathWidth) {
   var len = pathWidth
   var incr = len / numRenderedPoints;
-
   var evenSpacedArray = [];
   var i = 1;
   var j = 0;
