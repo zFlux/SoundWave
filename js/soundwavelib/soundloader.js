@@ -1,8 +1,7 @@
-window.onload = init;
 var context;
 var bufferLoader;
 
-function init() {
+function loadSound(filename) {
   // Fix up prefixing
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   context = new AudioContext();
@@ -10,7 +9,7 @@ function init() {
   bufferLoader = new BufferLoader(
     context,
     [
-      '../audio/1.wav',
+      '../audio/' + filename,
     ],
     finishedLoading
     );

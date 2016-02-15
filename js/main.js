@@ -37,4 +37,10 @@ $(document).ready(
       var frequency = $("#points").val();
       soundWave.playSoundwave(frequency, $("#duration").val());
     });
+
+    $('#load').click(function() {
+      var filename = $("#wav_file").val();
+      soundWave.playSoundwave(frequency, $("#duration").val());
+    });
+
   });
