@@ -150,10 +150,9 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
   }
 
   SoundWave.prototype.loadSoundwave = function(filename) {
-    this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();;
 
     bufferLoader = new BufferLoader(
-      context,
+      this.audioCtx,
       [
         '../audio/' + filename,
       ],
@@ -167,7 +166,7 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
     // Create two sources and play them both together.
     var source1 = this.audioCtx.createBufferSource();
     source1.buffer = bufferList[0];
-    source1.connect(context.destination);
+    source1.connect(this.audioCtx.destination);
     source1.start(0);
   }
 
