@@ -150,8 +150,7 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
   }
 
   SoundWave.prototype.loadSoundwave = function(filename) {
-    context = this.audioCtx;
-    bufferLoader = new BufferLoader(context,['../audio/' + filename,],this.processLoadedSound);
+    bufferLoader = new BufferLoader(this.audioCtx,['../audio/' + filename,],this.processLoadedSound);
     bufferLoader.load();
   }
 
