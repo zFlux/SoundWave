@@ -22,7 +22,7 @@ var SoundWave = function(canvas, audioCtx) {
 };
 
 // This method is private and just sets up the first and last control lines
-SoundWave.prototype.addFirstAndLastCtrlPoints = function(mouseX, mouseY) {
+SoundWave.prototype.addFirstAndLastCtrlLines = function(mouseX, mouseY) {
   // create the first and last control lines based on the position of the mouse
     this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length] = new LineWithMidpoint(this.canvas);
     this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 1].createPoint({
@@ -47,7 +47,7 @@ SoundWave.prototype.addFirstAndLastCtrlPoints = function(mouseX, mouseY) {
 SoundWave.prototype.addCtrlLine = function(mouseX, mouseY) {
   // if control line array is empty create the first and last control lines
   if (this.soundWaveObj.ctrlLines.length == 0) {
-    this.addFirstAndLastCtrlPoints(mouseX, mouseY);
+    this.addFirstAndLastCtrlLines(mouseX, mouseY);
   // if there are at least two control lines and the second last control line (i.e. the user's last control line)
   // is full at the time of the click then move the ending control line forward and put a new control line in its place
   } else if (this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2].isFull()) {
