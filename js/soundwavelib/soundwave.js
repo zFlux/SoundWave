@@ -157,7 +157,7 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
       [
         '../audio/' + filename,
       ],
-      processLoadedSound
+      this.processLoadedSound
       );
 
     bufferLoader.load();
