@@ -21,9 +21,9 @@ var SoundWave = function(canvas, audioCtx) {
   this.canvas.addChild(this.soundWaveObj);
 };
 
-SoundWave.prototype.addCtrlPoint = function(mouseX, mouseY) {
-  // if control line array is empty create the first and last control lines
-  if (this.soundWaveObj.ctrlLines.length == 0) {
+// This method is private and just sets up the first and last control lines
+SoundWave.prototype.addFirstAndLastCtrlPoints = function(mouseX, mouseY) {
+  // create the first and last control lines based on the position of the mouse
     this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length] = new LineWithMidpoint(this.canvas);
     this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 1].createPoint({
       x: -mouseX,
@@ -42,13 +42,23 @@ SoundWave.prototype.addCtrlPoint = function(mouseX, mouseY) {
       x: this.canvas.width + mouseX,
       y: this.canvas.height - mouseY
     });
-  } else if (this.soundWaveObj.ctrlLines.length > 1 && this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2].isFull()) {
-    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length] = this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 1];
-    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2] = new LineWithMidpoint(this.canvas);
-    this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2].createPoint({
+};
+
+SoundWave.prototype.addCtrlLine = function(mouseX, mouseY) {
+  // if control line array is empty create the first and last control lines
+  if (this.soundWaveObj.ctrlLines.length == 0) {
+    this.addFirstAndLastCtrlPoints(mouseX, mouseY);
+  // if there are at least two control lines and the second last control line (i.e. the user's last control line)
+  // is full at the time of the click then move the ending control line forward and put a new control line in its place
+  } else if (this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2].isFull()) {
+    var curCtrlLineLength = this.soundWaveObj.ctrlLines.length - 1;
+    this.soundWaveObj.ctrlLines[curCtrlLineLength + 1] = this.soundWaveObj.ctrlLines[curCtrlLineLength];
+    this.soundWaveObj.ctrlLines[curCtrlLineLength] = new LineWithMidpoint(this.canvas);
+    this.soundWaveObj.ctrlLines[curCtrlLineLength].createPoint({
       x: mouseX,
       y: mouseY
     });
+  // if the user's last control line is not full then add a point to it
   } else {
     this.soundWaveObj.ctrlLines[this.soundWaveObj.ctrlLines.length - 2].createPoint({
       x: mouseX,
@@ -68,7 +78,7 @@ SoundWave.prototype.toggleVisibleCtrlPoints = function() {
 
 };
 
-SoundWave.prototype.soundPoints = function(frequency) {
+SoundWave.prototype.returnSoundCtrlLines = function(frequency) {
   var sndCtrlLineArray = [];
 
   for (i = 0; i < this.soundWaveObj.ctrlLines.length; i++) {
@@ -86,7 +96,7 @@ SoundWave.prototype.reset = function() {
 };
 
 SoundWave.prototype.playSoundwave = function(frequency, duration) {
-  var wave = this.soundPoints(frequency);
+  var wave = this.returnSoundCtrlLines(frequency);
   var channels = 2; // Make it a stereo sound
   var frameCount = this.audioCtx.sampleRate * duration;
   var myArrayBuffer = this.audioCtx.createBuffer(channels, frameCount, this.audioCtx.sampleRate); // Create an empty duration seconds of stereo buffer at the sample rate of the AudioContext
@@ -118,14 +128,12 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
   // first two control lines with all points or more control lines so long as the second last one has all points
   if ((this.ctrlLines.length == 2 && this.ctrlLines[this.ctrlLines.length - 1].isFull()) || (this.ctrlLines.length > 2 && this.ctrlLines[this.ctrlLines.length - 2].isFull())) {
 
-
     // check if we're dragging p2 of the first control line or p1 of the last
     if (this.ctrlLines[0].line.p2.dragging == true) {
       this.ctrlLines[this.ctrlLines.length-1].line.p1.x =  this.ctrlLines[0].line.p1.x + canvas.canvas.width;
       this.ctrlLines[this.ctrlLines.length-1].line.p1.y =  this.ctrlLines[0].line.p1.y;
       this.ctrlLines[this.ctrlLines.length-1].line.p2.x = this.ctrlLines[0].line.p2.x + canvas.canvas.width;
       this.ctrlLines[this.ctrlLines.length-1].line.p2.y = this.ctrlLines[0].line.p2.y;
-
     }
 
     canvas.beginPath();
