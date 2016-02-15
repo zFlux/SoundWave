@@ -15,6 +15,8 @@ $(document).ready(
     var audioCtx = new(window.AudioContext || window.webkitAudioContext)(); // Global audio context
     var soundWave = new SoundWave(canvas, audioCtx);
 
+    loadDogSound("http://danielchristo.com/audio/1.wav");
+    
     canvas.bind("dblclick", function(click) {
       if (click.which == RIGHT_MOUSE) {
         soundWave.addCtrlLine(canvas.mouse.x, canvas.mouse.y);
