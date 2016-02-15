@@ -40,7 +40,7 @@ $(document).ready(
 
     $('#load').click(function() {
       var filename = $("#wav_file").val();
-      loadSound(filename);
+      soundWave.loadSoundWave(filename);
     });
 
   });

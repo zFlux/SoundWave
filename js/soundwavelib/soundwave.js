@@ -148,4 +148,19 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
     canvas.stroke();
     canvas.closePath();
   }
+
+  SoundWave.prototype.loadSoundwave = function(filename) {
+    context = this.audioCtx;
+    bufferLoader = new BufferLoader(context,['../audio/' + filename,],this.processLoadedSound);
+    bufferLoader.load();
+  }
+
+  SoundWave.prototype.processLoadedSound = function(bufferList) {
+    // Create two sources and play them both together.
+    var source1 = context.createBufferSource();
+    source1.buffer = bufferList[0];
+    source1.connect(context.destination);
+    source1.start(0);
+  }
+
 };
