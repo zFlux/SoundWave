@@ -150,6 +150,29 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
   }
 
   SoundWave.prototype.loadSoundwave = function(filename) {
+    var request = new XMLHttpRequest();
+    var urlList =  ['../audio/' + filename];
+    var bufferList = new Array();
+    var loadCount = 0;
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
+
+    this.audioCtx.context.decodeAudioData(
+      request.response,
+      function(buffer) {
+        if (!buffer) {
+          alert('error decoding file data: ' + url);
+          return;
+        }
+        loader.bufferList[index] = buffer;
+        if (++loadCount == urlList.length)
+          loader.onload(loader.bufferList);
+      },
+      function(error) {
+        console.error('decodeAudioData error', error);
+      }
+    );
+
     bufferLoader = new BufferLoader(
       this.audioCtx,
       [
@@ -161,7 +184,7 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
     bufferLoader.load();
   }
 
-  SoundWave.prototype.processLoadedSound = function(bufferList) {
+  SoundWave.prototype.processLoadedSound = function(bufferList, sndWave) {
     // Create two sources and play them both together.
     var source1 = this.context.createBufferSource();
     source1.buffer = bufferList[0];

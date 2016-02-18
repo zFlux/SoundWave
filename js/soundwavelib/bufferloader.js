@@ -1,7 +1,8 @@
-function BufferLoader(context, urlList, callback) {
+function BufferLoader(context, urlList, callback, sndWave) {
   this.context = context;
   this.urlList = urlList;
   this.onload = callback;
+  this.sndWave = sndWave;
   this.bufferList = new Array();
   this.loadCount = 0;
 }
@@ -25,7 +26,7 @@ BufferLoader.prototype.loadBuffer = function(url, index) {
         }
         loader.bufferList[index] = buffer;
         if (++loader.loadCount == loader.urlList.length)
-          loader.onload(loader.bufferList);
+          loader.onload(loader.bufferList, loader.sndWave);
       },
       function(error) {
         console.error('decodeAudioData error', error);
