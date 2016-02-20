@@ -149,17 +149,23 @@ SoundWave.prototype.drawSoundwave = function(canvas) {
     canvas.closePath();
   }
 
+  // Calls the buffer loader which performs an AJAX call to get the wav data
   SoundWave.prototype.loadSoundwave = function(filename) {
     bufferLoader = new BufferLoader(this.audioCtx,['../audio/' + filename], this.processLoadedSound, this);
     bufferLoader.load();
   }
 
+  // This method takes a sound buffer and feeds it into the soundwave object
+  // the decoding process uses this method as a callback passing in a reference to the soundwave object
+  // this is odd because this is the soundwave object but this doesn't refer to the parent object in js
   SoundWave.prototype.processLoadedSound = function(bufferList, sndWave) {
-    // Create two sources and play them both together.
     var source = this.context.createBufferSource();
-    source.buffer = bufferList[0];
-    source.connect(this.context.destination);
-    source.start(0);
+    var loadedBuffer = bufferList[0].getChannelData(0);
+
+    var canvasIncr = sndWave.canvas.width / loadedBuffer.length
+    for (i = 0, j = 0; i < loadedBuffer.length; i++, j+=canvasIncr) {
+        sndWave.addCtrlLine(j, ((loadedBuffer[i] + 1)/2)*sndWave.canvas.ht);
+    }
   }
 
 };
